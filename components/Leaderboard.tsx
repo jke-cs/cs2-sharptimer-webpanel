@@ -15,15 +15,12 @@ export default async function Leaderboard() {
 
   return (
     <div className="flex flex-col md:flex-row gap-4 sm:gap-6 md:gap-8 p-4 sm:p-6 md:p-8 max-w-7xl mx-auto">
-      {/* Leaderboard */}
       <div className="w-full md:w-3/5 bg-gray-800 rounded-lg shadow-lg p-4 sm:p-6">
         <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-center text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-200">Top Players</h2>
         <LeaderboardWrapper initialLeaderboard={leaderboard} />
       </div>
 
-      {/* Right column for Global Points and Ranks */}
       <div className="w-full md:w-2/5 space-y-4 sm:space-y-6 md:space-y-8">
-        {/* How to get Global Points */}
         <div className="bg-gray-800 rounded-lg p-4 sm:p-6 shadow-lg">
           <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 md:mb-6 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-200">How to get Global Points</h2>
           <ul className="space-y-2">
@@ -41,7 +38,7 @@ export default async function Leaderboard() {
           </ul>
         </div>
 
-        {/* In-game Ranks */}
+
         <div className="bg-gray-800 rounded-lg p-4 sm:p-6 shadow-lg">
           <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 md:mb-6 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-200">In-game Ranks</h2>
           <ul className="space-y-2">

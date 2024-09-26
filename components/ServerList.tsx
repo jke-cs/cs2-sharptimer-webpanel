@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import ServerCard from './ServerCard'
+import LoadingSpinner from './LoadingSpinner'
 
 interface Server {
   name: string
@@ -37,7 +38,7 @@ export default function ServerList() {
   }, [])
 
   if (loading) {
-    return <div className="text-center py-8">Loading server data...</div>
+    return <LoadingSpinner />
   }
 
   if (error) {
