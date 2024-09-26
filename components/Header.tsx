@@ -13,7 +13,7 @@ export default function Header() {
         <Link href="/" className="text-2xl font-bold text-purple-600 dark:text-purple-400 hover:text-purple-500 dark:hover:text-purple-300 transition-colors">
           CS2 Sharptimer Webpanel
         </Link>
-        <nav>
+        <nav className="absolute left-1/2 transform -translate-x-1/2">
           <ul className="flex space-x-6">
             <li><Link href="/" className="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Home</Link></li>
             <li><Link href="/leaderboard" className="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Leaderboard</Link></li>
