@@ -1,7 +1,8 @@
-# CS2 Sharptimer Webpanel 
 
 > [!NOTE]
 >This website is in development check this repository regulary for updates.
+
+# CS2 Sharptimer Webpanel 
 
 This project is a NextJS Webpanel for Sharptimer.
 
