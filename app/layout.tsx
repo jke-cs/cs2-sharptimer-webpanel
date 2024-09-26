@@ -5,8 +5,8 @@ import { ThemeProvider } from '../context/ThemeContext'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
-  title: 'Dark Mode Next.js App',
-  description: 'A Next.js app with dark mode functionality',
+  title: 'CS2 Sharptimer Webpanel',
+  description: 'A Next.js webpanel for CS2 Sharptimer',
 }
 
 export default function RootLayout({
