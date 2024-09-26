@@ -39,65 +39,33 @@ const CardFooter: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ children, 
   </div>
 )
 
-const PlayerCountGraph: React.FC<{ data: { time: string; count: number }[]; maxPlayers: number }> = ({ data, maxPlayers }) => {
-  const height = 100
-  const width = 300
-  const padding = 20
-  const barWidth = (width - padding * 2) / data.length
-
-  const yScale = (count: number) => {
-    const graphHeight = height - padding * 2
-    return graphHeight - (count / maxPlayers) * graphHeight
-  }
+const PlayerCountBar: React.FC<{ currentPlayers: number; maxPlayers: number }> = ({ currentPlayers, maxPlayers }) => {
+  const widthPercentage = Math.min((currentPlayers / maxPlayers) * 100, 100)
 
   return (
-    <svg width={width} height={height} className="player-count-graph">
-      <defs>
-        <linearGradient id="barGradient" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0%" stopColor="rgba(59, 130, 246, 0.8)" />
-          <stop offset="100%" stopColor="rgba(59, 130, 246, 0.2)" />
-        </linearGradient>
-      </defs>
-      {data.map((d, i) => (
-        <g key={i}>
-          <rect
-            x={padding + i * barWidth}
-            y={padding + yScale(d.count)}
-            width={barWidth - 2}
-            height={height - padding * 2 - yScale(d.count)}
-            fill="url(#barGradient)"
-            rx={2}
-          />
-          <text
-            x={padding + i * barWidth + barWidth / 2}
-            y={padding + yScale(d.count) - 5}
-            textAnchor="middle"
-            fontSize="10"
-            fill="currentColor"
-          >
-            {d.count}
-          </text>
-        </g>
-      ))}
-      <line
-        x1={padding}
-        y1={height - padding}
-        x2={width - padding}
-        y2={height - padding}
-        stroke="currentColor"
-        strokeOpacity="0.2"
-      />
-      <text
-        x={width - padding}
-        y={padding}
-        textAnchor="end"
-        fontSize="10"
-        fill="currentColor"
-        opacity="0.7"
-      >
-        Max: {maxPlayers}
-      </text>
-    </svg>
+    <div className="w-full mt-4">
+      <div className="relative h-4 w-full bg-gray-300 rounded-full overflow-hidden shadow-md"> 
+        <div
+          className="absolute top-0 left-0 h-full rounded-full bg-gradient-to-r from-purple-700 to-purple-500 animate-gradient-move"
+          style={{
+            width: `${widthPercentage}%`,
+            transition: 'width 1s ease-in-out',
+          }}
+        />
+        {/* Glow Effect */}
+        <div
+          className="absolute top-0 left-0 h-full rounded-full bg-purple-700/40 blur-sm"
+          style={{
+            width: `${widthPercentage}%`,
+            transition: 'width 1s ease-in-out',
+          }}
+        />
+        {/* Percentage Text */}
+        <span className="absolute inset-0 flex items-center justify-center text-xs font-semibold text-white"> {/* Reduced font size here */}
+          {currentPlayers}/{maxPlayers} Players ({Math.round(widthPercentage)}%)
+        </span>
+      </div>
+    </div>
   )
 }
 
@@ -122,15 +90,15 @@ export default function ServerCard({ server }: ServerProps) {
       const now = new Date()
       const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       const newData = { time, count: server.numPlayers }
-      
+
       setPlayerCountHistory(prev => {
-        const updated = [...prev, newData].slice(-30) // Keep last 30 data points (30 minutes)
+        const updated = [...prev, newData].slice(-30)
         return updated
       })
     }
 
-    updatePlayerCount() // Initial update
-    const intervalId = setInterval(updatePlayerCount, 60000) // Update every minute
+    updatePlayerCount() 
+    const intervalId = setInterval(updatePlayerCount, 60000) 
 
     return () => clearInterval(intervalId)
   }, [server.numPlayers])
@@ -138,7 +106,8 @@ export default function ServerCard({ server }: ServerProps) {
   const copyToClipboard = async () => {
     setCopying(true)
     try {
-      await navigator.clipboard.writeText(server.connect)
+      const ipWithConnect = `connect ${server.connect}`
+      await navigator.clipboard.writeText(ipWithConnect)
     } catch (err) {
       console.error('Failed to copy server IP:', err)
     } finally {
@@ -154,7 +123,7 @@ export default function ServerCard({ server }: ServerProps) {
 
   return (
     <Card className="transition-all duration-300 hover:shadow-lg">
-      <div 
+      <div
         className="h-48 bg-cover bg-center"
         style={{ backgroundImage: `url(${mapImageUrl})` }}
       >
@@ -184,10 +153,10 @@ export default function ServerCard({ server }: ServerProps) {
           </div>
         </div>
         <div className="mt-6 flex space-x-2">
-          <Button 
-            onClick={copyToClipboard} 
-            disabled={copying} 
-            variant="outline" 
+          <Button
+            onClick={copyToClipboard}
+            disabled={copying}
+            variant="outline"
             className="flex-1 hover:bg-primary hover:text-primary-foreground"
           >
             {copying ? (
@@ -199,8 +168,8 @@ export default function ServerCard({ server }: ServerProps) {
               </>
             )}
           </Button>
-          <Button 
-            onClick={openSteamConnect} 
+          <Button
+            onClick={openSteamConnect}
             className="flex-1 bg-green-500 text-white hover:bg-green-600"
           >
             <PlayIcon className="w-4 h-4 mr-2" />
@@ -214,7 +183,7 @@ export default function ServerCard({ server }: ServerProps) {
             Player Count
           </span>
         </div>
-        <PlayerCountGraph data={playerCountHistory} maxPlayers={server.maxPlayers} />
+        <PlayerCountBar currentPlayers={server.numPlayers} maxPlayers={server.maxPlayers} />
       </CardFooter>
     </Card>
   )

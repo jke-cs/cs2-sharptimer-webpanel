@@ -25,3 +25,22 @@ body {
     text-wrap: balance;
   }
 }
+
+/* Animation for the gradient movement */
+@keyframes gradientMove {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-gradient {
+  background-size: 200% 100%;
+  animation: gradientMove 3s linear infinite;
+}
+
+.animate-grow {
+  transition: width 0.6s ease-in-out;
+}

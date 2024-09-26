@@ -17,6 +17,7 @@ export default function Header() {
           <ul className="flex space-x-6">
             <li><Link href="/" className="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Home</Link></li>
             <li><Link href="/leaderboard" className="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Leaderboard</Link></li>
+            <li><Link href="/maprecords" className="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Map Records</Link></li>
           </ul>
         </nav>
         <button 
