@@ -11,7 +11,7 @@ export default function Header() {
     <header className="bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 transition-colors duration-300">
       <div className="container mx-auto px-4 py-6 flex justify-between items-center">
         <Link href="/" className="flex items-center">
-          <img
+        <img
             src="/img/logo.png" 
             alt="Logo"
             className="h-10 transition-transform duration-200 ease-in-out hover:scale-110 hover:filter hover:brightness-50"
