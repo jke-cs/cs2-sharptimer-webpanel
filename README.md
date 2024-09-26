@@ -29,13 +29,17 @@ https://discord.gg/n4xCDWrQRB
 <img src="https://i.gyazo.com/5a825ff37824ede31d95ec6cc8a19624.png" />
 </a>
 </div>
+
 # Leaderboard
+
 <div align="center">
 <a href="https://i.gyazo.com/ba27ca9044edcb2462eb3fd6454210c7.png">
 <img src="https://i.gyazo.com/ba27ca9044edcb2462eb3fd6454210c7.png" />
 </a>
 </div>
+
 # MapRecords
+
 <div align="center">
 <a href="https://i.gyazo.com/91ec6ff7e45226444a8ea625ffa2a69a.png">
 <img src="https://i.gyazo.com/91ec6ff7e45226444a8ea625ffa2a69a.png" />
