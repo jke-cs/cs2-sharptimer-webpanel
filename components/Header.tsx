@@ -10,8 +10,12 @@ export default function Header() {
   return (
     <header className="bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 transition-colors duration-300">
       <div className="container mx-auto px-4 py-6 flex justify-between items-center">
-        <Link href="/" className="text-2xl font-bold text-purple-600 dark:text-purple-400 hover:text-purple-500 dark:hover:text-purple-300 transition-colors">
-          CS2 Sharptimer Webpanel
+        <Link href="/" className="flex items-center">
+          <img
+            src="/img/logo.png" // Your existing logo
+            alt="Logo"
+            className="h-10 transition-transform duration-200 ease-in-out hover:scale-110 hover:filter hover:brightness-50"
+          />
         </Link>
         <nav className="absolute left-1/2 transform -translate-x-1/2">
           <ul className="flex space-x-6">

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTheme } from '../context/ThemeContext'
 import LeaderboardWrapper from './LeaderboardWrapper';
 
 async function getPlayers() {

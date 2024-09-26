@@ -18,18 +18,20 @@ export default function Footer() {
               </a>
             </div>
           </div>
-          <div>
-            <h4 className="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-4">Quick Links</h4>
-            <ul className="space-y-2">
-              <li><Link href="/" className="text-sm text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Home</Link></li>
-              <li><Link href="/leaderboard" className="text-sm text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Leaderboard</Link></li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-4">Support</h4>
-            <ul className="space-y-2">
-              <li><Link href="https://discord.gg/n4xCDWrQRB" className="text-sm text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors">Discord Support</Link></li>
-            </ul>
+          <div className="col-span-1 flex justify-start md:justify-end md:col-span-2">
+            <div className="mr-8"> 
+              <h4 className="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-2">Support</h4>
+              <ul className="space-y-2">
+                <li>
+                  <Link 
+                    href="https://discord.gg/n4xCDWrQRB" 
+                    className="text-sm text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
+                  >
+                    Discord Support
+                  </Link>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
         <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">

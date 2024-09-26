@@ -6,7 +6,7 @@ export default function Home() {
     <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
       <Header />
       <main className="flex-grow container mx-auto px-4 py-12">
-        <p>HELLO WHATS UP</p>
+        <p>SOON</p>
       </main>
       <Footer />
     </div>
