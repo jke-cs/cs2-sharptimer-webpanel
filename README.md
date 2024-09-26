@@ -4,7 +4,7 @@
 
 # CS2 Sharptimer Webpanel 
 
-This project is a NextJS Webpanel for Sharptimer.
+This project is a NextJS+React Webpanel for Sharptimer.
 
 ## Setup
 
