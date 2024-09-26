@@ -16,4 +16,4 @@ This project is a NextJS+React Webpanel for Sharptimer.
 
 ## Customizing Server IPs
 
-To add or modify server IPs, edit the `SERVER_IPS` variable in your `.env.local` file. The format is a JSON array of objects, each containing an `ip` and `port`:
+To add or modify server IPs, edit the `SERVER_IPS` variable in your `.env.local` file. The format is a JSON array of objects, each containing an `ip` and `port`.
