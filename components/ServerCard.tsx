@@ -1,36 +1,103 @@
-import React, { useState } from 'react'
+"use client"
+
+import React, { useState, useEffect } from 'react'
 import { MapIcon, UsersIcon, ZapIcon, GamepadIcon, CopyIcon, PlayIcon } from 'lucide-react'
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "default" | "outline"
-  size?: "default" | "sm" | "lg"
-}
-
-const Button: React.FC<ButtonProps> = ({ 
-  children, 
-  className = "", 
-  variant = "default", 
-  size = "default", 
-  ...props 
-}) => {
-  const baseStyles = "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none"
+const Button: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement> & {
+  variant?: 'default' | 'outline'
+}> = ({ children, className = '', variant = 'default', ...props }) => {
+  const baseStyles = 'inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none'
   const variantStyles = {
-    default: "bg-primary text-primary-foreground hover:bg-primary/90",
-    outline: "border border-input hover:bg-accent hover:text-accent-foreground"
+    default: 'bg-primary text-primary-foreground hover:bg-primary/90',
+    outline: 'border border-input bg-background hover:bg-accent hover:text-accent-foreground'
   }
-  const sizeStyles = {
-    default: "h-10 py-2 px-4",
-    sm: "h-9 px-3 rounded-md",
-    lg: "h-11 px-8 rounded-md"
-  }
-
   return (
-    <button 
-      className={`${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]} ${className}`}
+    <button
+      className={`${baseStyles} ${variantStyles[variant]} h-10 py-2 px-4 ${className} transition-colors duration-200`}
       {...props}
     >
       {children}
     </button>
+  )
+}
+
+const Card: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ children, className = '', ...props }) => (
+  <div className={`rounded-lg border bg-card text-card-foreground shadow-sm overflow-hidden ${className}`} {...props}>
+    {children}
+  </div>
+)
+
+const CardContent: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ children, className = '', ...props }) => (
+  <div className={`p-6 ${className}`} {...props}>
+    {children}
+  </div>
+)
+
+const CardFooter: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ children, className = '', ...props }) => (
+  <div className={`flex items-center p-6 pt-0 ${className}`} {...props}>
+    {children}
+  </div>
+)
+
+const PlayerCountGraph: React.FC<{ data: { time: string; count: number }[]; maxPlayers: number }> = ({ data, maxPlayers }) => {
+  const height = 100
+  const width = 300
+  const padding = 20
+  const barWidth = (width - padding * 2) / data.length
+
+  const yScale = (count: number) => {
+    const graphHeight = height - padding * 2
+    return graphHeight - (count / maxPlayers) * graphHeight
+  }
+
+  return (
+    <svg width={width} height={height} className="player-count-graph">
+      <defs>
+        <linearGradient id="barGradient" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0%" stopColor="rgba(59, 130, 246, 0.8)" />
+          <stop offset="100%" stopColor="rgba(59, 130, 246, 0.2)" />
+        </linearGradient>
+      </defs>
+      {data.map((d, i) => (
+        <g key={i}>
+          <rect
+            x={padding + i * barWidth}
+            y={padding + yScale(d.count)}
+            width={barWidth - 2}
+            height={height - padding * 2 - yScale(d.count)}
+            fill="url(#barGradient)"
+            rx={2}
+          />
+          <text
+            x={padding + i * barWidth + barWidth / 2}
+            y={padding + yScale(d.count) - 5}
+            textAnchor="middle"
+            fontSize="10"
+            fill="currentColor"
+          >
+            {d.count}
+          </text>
+        </g>
+      ))}
+      <line
+        x1={padding}
+        y1={height - padding}
+        x2={width - padding}
+        y2={height - padding}
+        stroke="currentColor"
+        strokeOpacity="0.2"
+      />
+      <text
+        x={width - padding}
+        y={padding}
+        textAnchor="end"
+        fontSize="10"
+        fill="currentColor"
+        opacity="0.7"
+      >
+        Max: {maxPlayers}
+      </text>
+    </svg>
   )
 }
 
@@ -47,7 +114,26 @@ interface ServerProps {
 
 export default function ServerCard({ server }: ServerProps) {
   const [copying, setCopying] = useState(false)
-  const playerPercentage = (server.numPlayers / server.maxPlayers) * 100
+  const [playerCountHistory, setPlayerCountHistory] = useState<{ time: string; count: number }[]>([])
+  const mapImageUrl = `https://cs2browser.com/static/img/maps/${server.map}.webp`
+
+  useEffect(() => {
+    const updatePlayerCount = () => {
+      const now = new Date()
+      const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      const newData = { time, count: server.numPlayers }
+      
+      setPlayerCountHistory(prev => {
+        const updated = [...prev, newData].slice(-30) // Keep last 30 data points (30 minutes)
+        return updated
+      })
+    }
+
+    updatePlayerCount() // Initial update
+    const intervalId = setInterval(updatePlayerCount, 60000) // Update every minute
+
+    return () => clearInterval(intervalId)
+  }, [server.numPlayers])
 
   const copyToClipboard = async () => {
     setCopying(true)
@@ -56,7 +142,7 @@ export default function ServerCard({ server }: ServerProps) {
     } catch (err) {
       console.error('Failed to copy server IP:', err)
     } finally {
-      setCopying(false)
+      setTimeout(() => setCopying(false), 2000)
     }
   }
 
@@ -67,62 +153,69 @@ export default function ServerCard({ server }: ServerProps) {
   }
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden transition-transform duration-300 hover:scale-105">
-      <div className="p-6">
-        <h2 className="text-2xl font-bold mb-4 text-purple-600 dark:text-purple-400">{server.name || 'Unknown Server'}</h2>
+    <Card className="transition-all duration-300 hover:shadow-lg">
+      <div 
+        className="h-48 bg-cover bg-center"
+        style={{ backgroundImage: `url(${mapImageUrl})` }}
+      >
+        <div className="h-full w-full bg-black bg-opacity-50 p-6 flex flex-col justify-between">
+          <h2 className="text-2xl font-bold text-white">{server.name || 'Unknown Server'}</h2>
+          <div className="flex items-center text-white">
+            <MapIcon className="w-5 h-5 mr-2" />
+            <span>{server.map || 'Unknown'}</span>
+          </div>
+        </div>
+      </div>
+      <CardContent className="p-6">
         <div className="space-y-3">
           <div className="flex items-center">
-            <MapIcon className="w-5 h-5 mr-2 text-gray-500 dark:text-gray-400" />
-            <span className="text-gray-700 dark:text-gray-300">{server.map || 'Unknown'}</span>
-          </div>
-          <div className="flex items-center">
-            <UsersIcon className="w-5 h-5 mr-2 text-gray-500 dark:text-gray-400" />
-            <span className="text-gray-700 dark:text-gray-300">
+            <UsersIcon className="w-5 h-5 mr-2 text-muted-foreground" />
+            <span className="text-foreground">
               {server.numPlayers}/{server.maxPlayers} Players
             </span>
           </div>
           <div className="flex items-center">
-            <ZapIcon className="w-5 h-5 mr-2 text-gray-500 dark:text-gray-400" />
-            <span className="text-gray-700 dark:text-gray-300">{server.ping || 'N/A'} ms</span>
+            <ZapIcon className="w-5 h-5 mr-2 text-muted-foreground" />
+            <span className="text-foreground">{server.ping || 'N/A'} ms</span>
           </div>
           <div className="flex items-center">
-            <GamepadIcon className="w-5 h-5 mr-2 text-gray-500 dark:text-gray-400" />
-            <span className="text-gray-700 dark:text-gray-300">{server.connect || 'Unknown'}</span>
+            <GamepadIcon className="w-5 h-5 mr-2 text-muted-foreground" />
+            <span className="text-foreground">{server.connect || 'Unknown'}</span>
           </div>
         </div>
-        <div className="mt-4 flex space-x-2">
-          <Button onClick={copyToClipboard} disabled={copying} className="flex-1 bg-blue-500 hover:bg-blue-600 text-white">
-            <CopyIcon className="w-4 h-4 mr-2" />
-            {copying ? 'Copying...' : 'Copy IP'}
+        <div className="mt-6 flex space-x-2">
+          <Button 
+            onClick={copyToClipboard} 
+            disabled={copying} 
+            variant="outline" 
+            className="flex-1 hover:bg-primary hover:text-primary-foreground"
+          >
+            {copying ? (
+              'Copied!'
+            ) : (
+              <>
+                <CopyIcon className="w-4 h-4 mr-2" />
+                Copy IP
+              </>
+            )}
           </Button>
-          <Button onClick={openSteamConnect} className="flex-1 bg-green-500 hover:bg-green-600 text-white">
+          <Button 
+            onClick={openSteamConnect} 
+            className="flex-1 bg-green-500 text-white hover:bg-green-600"
+          >
             <PlayIcon className="w-4 h-4 mr-2" />
             Connect
           </Button>
         </div>
-      </div>
-      <div className="bg-gray-100 dark:bg-gray-700 px-6 py-4">
-        <div className="relative pt-1">
-          <div className="flex mb-2 items-center justify-between">
-            <div>
-              <span className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-purple-600 bg-purple-200 dark:text-purple-200 dark:bg-purple-800">
-                Playercount
-              </span>
-            </div>
-            <div className="text-right">
-              <span className="text-xs font-semibold inline-block text-purple-600 dark:text-purple-400">
-                {playerPercentage.toFixed(0)}%
-              </span>
-            </div>
-          </div>
-          <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-purple-200 dark:bg-purple-800">
-            <div
-              style={{ width: `${playerPercentage}%` }}
-              className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-purple-500 dark:bg-purple-400"
-            ></div>
-          </div>
+      </CardContent>
+      <CardFooter className="bg-muted p-6 flex-col items-start">
+        <div className="w-full mb-2">
+          <span className="text-sm font-medium text-muted-foreground">
+            Player Count
+          </span>
         </div>
-      </div>
-    </div>
+        <PlayerCountGraph data={playerCountHistory} maxPlayers={server.maxPlayers} />
+      </CardFooter>
+    </Card>
   )
 }
