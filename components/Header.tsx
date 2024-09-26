@@ -12,7 +12,7 @@ export default function Header() {
       <div className="container mx-auto px-4 py-6 flex justify-between items-center">
         <Link href="/" className="flex items-center">
           <img
-            src="/img/logo.png" // Your existing logo
+            src="/img/logo.png"
             alt="Logo"
             className="h-10 transition-transform duration-200 ease-in-out hover:scale-110 hover:filter hover:brightness-50"
           />
