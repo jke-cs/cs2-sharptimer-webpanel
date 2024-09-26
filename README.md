@@ -3,6 +3,9 @@
 # CS2 Sharptimer Webpanel 
 
 This project is a NextJS+React Webpanel for Sharptimer.
+## Requirements
+
+[NODE.JS](https://nodejs.org/en/download/package-manager/current)
 
 ## Setup
 
