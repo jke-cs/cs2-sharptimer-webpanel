@@ -1,20 +1,21 @@
+<div align="center">
 [![Development Status](https://img.shields.io/badge/Status-In%20Development-yellow)](https://github.com/jke-cs/cs2-sharptimer-webpanel)
 [![Discord](https://img.shields.io/discord/371718546121556002?color=7289DA&logo=discord&logoColor=white)](https://discord.gg/n4xCDWrQRB)
+A NextJS+React Webpanel for Sharptimer
 
+</div>
 > [!NOTE]
 >This website is in development check this repository regulary for updates.
 
 # CS2 Sharptimer Webpanel
 
-<div align="center">
+
 
 ![CS2 Sharptimer Webpanel](https://i.gyazo.com/352c1fd3acb9a419b98657c5e90b5fec.png)
 
 
 
-A NextJS+React Webpanel for Sharptimer
 
-</div>
 
 ## 🛠️ Setup
 
