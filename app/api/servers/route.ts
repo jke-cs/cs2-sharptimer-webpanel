@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { GameDig } from 'gamedig';
+import Gamedig from 'gamedig';
 
 export async function GET() {
   const serverIPs = process.env.SERVER_IPS ? JSON.parse(process.env.SERVER_IPS) : [];
@@ -8,7 +8,7 @@ export async function GET() {
     const serversData = await Promise.all(
       serverIPs.map(async (server: { ip: string; port: number }) => {
         try {
-          const state = await GameDig.query({
+          const state = await Gamedig.query({
             type: 'csgo',
             host: server.ip,
             port: server.port,
