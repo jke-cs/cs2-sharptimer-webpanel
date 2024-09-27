@@ -130,7 +130,7 @@ export default function ServerCard({ server: initialServer, onRefresh }: ServerP
   }, [onRefresh])
 
   useEffect(() => {
-    updateServerInfo() // Initial update
+    updateServerInfo() 
     const intervalId = setInterval(updateServerInfo, 30000) // Update every 30 seconds
 
     return () => clearInterval(intervalId)
@@ -186,7 +186,7 @@ export default function ServerCard({ server: initialServer, onRefresh }: ServerP
             <div className="flex items-center">
               <PingIndicator ping={server.ping} />
               <span className={`font-medium ${getPingColor(server.ping)}`}>
-                {server.ping || 'N/A'} ms
+                {server.ping || '0'} ms
               </span>
             </div>
           </div>
