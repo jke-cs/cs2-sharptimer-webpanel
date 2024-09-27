@@ -20,3 +20,14 @@ To add or modify server IPs, edit the `SERVER_IPS` variable in your `.env.local`
 Join our Discord for Support.
 
 https://discord.gg/n4xCDWrQRB
+
+
+## Preview
+
+https://i.gyazo.com/11a7ae649cdaab755b273c92aaad79ad.png
+
+
+https://i.gyazo.com/ba27ca9044edcb2462eb3fd6454210c7.png
+
+
+https://i.gyazo.com/91ec6ff7e45226444a8ea625ffa2a69a.png
