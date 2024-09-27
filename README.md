@@ -33,3 +33,4 @@ SERVER_IPS=[{"ip":"192.168.1.100","port":27015},{"ip":"192.168.1.101","port":270
 
 
 Join our Discord for Support.
+https://discord.gg/n4xCDWrQRB
