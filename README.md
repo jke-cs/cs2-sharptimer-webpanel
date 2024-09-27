@@ -1,10 +1,20 @@
 > [!NOTE]
 >This website is in development check this repository regulary for updates.
-# CS2 Sharptimer Webpanel 
 
-This project is a NextJS+React Webpanel for Sharptimer.
+# CS2 Sharptimer Webpanel
 
-## Setup
+<div align="center">
+
+![CS2 Sharptimer Webpanel](https://i.gyazo.com/11a7ae649cdaab755b273c92aaad79ad.png)
+
+[![Development Status](https://img.shields.io/badge/Status-In%20Development-yellow)](https://github.com/jke-cs/cs2-sharptimer-webpanel)
+[![Discord](https://img.shields.io/discord/371718546121556002?color=7289DA&logo=discord&logoColor=white)](https://discord.gg/n4xCDWrQRB)
+
+A NextJS+React Webpanel for Sharptimer
+
+</div>
+
+## 🛠️ Setup
 
 1. Clone the repository
 2. Rename `.env.local.example` to `.env.local`
@@ -16,28 +26,10 @@ This project is a NextJS+React Webpanel for Sharptimer.
 
 To add or modify server IPs, edit the `SERVER_IPS` variable in your `.env.local` file. The format is a JSON array of objects, each containing an `ip` and `port`.
 
+Example:
+```
+SERVER_IPS=[{"ip":"192.168.1.100","port":27015},{"ip":"192.168.1.101","port":27016}]
+```
+
 
 Join our Discord for Support.
-
-https://discord.gg/n4xCDWrQRB
-
-
-## Preview
-
-<div align="center">
-<a href="https://i.gyazo.com/11a7ae649cdaab755b273c92aaad79ad.png">
-<img src="https://i.gyazo.com/11a7ae649cdaab755b273c92aaad79ad.png" />
-</a>
-</div>
-
-<div align="center">
-<a href="https://i.gyazo.com/ba27ca9044edcb2462eb3fd6454210c7.png">
-<img src="https://i.gyazo.com/ba27ca9044edcb2462eb3fd6454210c7.png" />
-</a>
-</div>
-
-<div align="center">
-<a href="https://i.gyazo.com/91ec6ff7e45226444a8ea625ffa2a69a.png">
-<img src="https://i.gyazo.com/91ec6ff7e45226444a8ea625ffa2a69a.png" />
-</a>
-</div>
