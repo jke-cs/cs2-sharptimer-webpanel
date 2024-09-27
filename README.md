@@ -6,6 +6,7 @@
 A NextJS+React Webpanel for Sharptimer
 
 </div>
+
 > [!NOTE]
 >This website is in development check this repository regulary for updates.
 
