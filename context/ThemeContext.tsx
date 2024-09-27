@@ -23,7 +23,6 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   }, [theme])
 
   useEffect(() => {
-    // Set dark mode as default
     document.documentElement.classList.add('dark')
   }, [])
 
