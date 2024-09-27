@@ -70,9 +70,9 @@ const PlayerCountBar: React.FC<{ currentPlayers: number; maxPlayers: number }> =
 
 const PingIndicator: React.FC<{ ping: number }> = ({ ping }) => {
   const getBarColor = (threshold: number) => {
-    if (ping <= threshold) {
+    if (ping < 50) {
       return 'bg-green-500'
-    } else if (ping <= 60) {
+    } else if (ping < 80) {
       return 'bg-orange-500'
     } else {
       return 'bg-red-500'
@@ -81,9 +81,9 @@ const PingIndicator: React.FC<{ ping: number }> = ({ ping }) => {
 
   return (
     <div className="flex items-end h-5 space-x-1 mr-2">
-      <div className={`w-1 h-1 ${getBarColor(60)}`} />
-      <div className={`w-1 h-3 ${ping <= 60 ? getBarColor(30) : 'bg-gray-300'}`} />
-      <div className={`w-1 h-5 ${ping <= 30 ? getBarColor(30) : 'bg-gray-300'}`} />
+      <div className={`w-1 h-1 ${getBarColor(80)}`} />
+      <div className={`w-1 h-3 ${ping < 80 ? getBarColor(50) : 'bg-gray-300'}`} />
+      <div className={`w-1 h-5 ${ping < 50 ? getBarColor(50) : 'bg-gray-300'}`} />
     </div>
   )
 }
@@ -130,8 +130,8 @@ export default function ServerCard({ server: initialServer, onRefresh }: ServerP
   }, [onRefresh])
 
   useEffect(() => {
-    updateServerInfo() 
-    const intervalId = setInterval(updateServerInfo, 30000) // Update every 30 seconds
+    updateServerInfo()
+    const intervalId = setInterval(updateServerInfo, 30000)
 
     return () => clearInterval(intervalId)
   }, [updateServerInfo])
@@ -155,8 +155,8 @@ export default function ServerCard({ server: initialServer, onRefresh }: ServerP
   }
 
   const getPingColor = (ping: number) => {
-    if (ping < 30) return 'text-green-500'
-    if (ping < 60) return 'text-orange-500'
+    if (ping < 50) return 'text-green-500'
+    if (ping < 80) return 'text-orange-500'
     return 'text-red-500'
   }
 
