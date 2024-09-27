@@ -47,3 +47,25 @@ body {
 .logo-hover-effect:hover {
   filter: brightness(0.5) saturate(2) hue-rotate(270deg);
 }
+
+.toggle-checkbox:checked {
+  @apply right-0 border-green-400;
+}
+.toggle-checkbox:checked + .toggle-label {
+  @apply bg-green-400;
+}
+.toggle-checkbox {
+  @apply right-4 border-gray-400 focus:outline-none;
+}
+.toggle-label {
+  @apply block w-10 h-6 rounded-full transition-colors duration-200 ease-in-out cursor-pointer;
+}
+
+
+html, body {
+  @apply min-h-screen;
+}
+
+body {
+  @apply transition-colors duration-300;
+}

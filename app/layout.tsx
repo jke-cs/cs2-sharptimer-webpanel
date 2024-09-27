@@ -15,8 +15,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className="dark">
-      <body className={inter.className}>
+    <html lang="en">
+      <body className={`${inter.className} min-h-screen transition-colors duration-300`}>
         <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
