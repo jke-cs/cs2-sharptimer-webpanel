@@ -1,3 +1,6 @@
+> [!NOTE]
+>This website is in development check this repository regulary for updates.
+
 <div align="center">
   
 [![Development Status](https://img.shields.io/badge/Status-In%20Development-yellow)](https://github.com/jke-cs/cs2-sharptimer-webpanel)
@@ -7,8 +10,7 @@ A NextJS+React Webpanel for Sharptimer
 
 </div>
 
-> [!NOTE]
->This website is in development check this repository regulary for updates.
+
 
 # CS2 Sharptimer Webpanel
 
