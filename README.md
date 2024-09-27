@@ -18,7 +18,7 @@ A NextJS+React Webpanel for Sharptimer
 
 1. Clone the repository
 2. Rename `.env.local.example` to `.env.local`
-3. Edit `.env.local` and replace the server IPs and ports with your own and your sharptimer mysql DB credentials
+3. Edit `.env.local` and replace the server IPs and ports with your own and add your sharptimer mysql DB credentials
 4. Run `npm install` to install dependencies
 5. Run `npm run dev` to start the development server
 
