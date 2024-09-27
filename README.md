@@ -41,12 +41,3 @@ https://discord.gg/n4xCDWrQRB
 <img src="https://i.gyazo.com/91ec6ff7e45226444a8ea625ffa2a69a.png" />
 </a>
 </div>
-
-
-
-
-
-
-
-
-
