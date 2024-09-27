@@ -2,7 +2,7 @@
 const nextConfig = {
     reactStrictMode: true,
     experimental: {
-      esmExternals: 'loose', // This allows CommonJS modules to be imported
+      esmExternals: 'loose',
     },
 }
 export default nextConfig;
