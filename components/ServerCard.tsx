@@ -130,8 +130,8 @@ export default function ServerCard({ server: initialServer, onRefresh }: ServerP
   }, [onRefresh])
 
   useEffect(() => {
-    updateServerInfo() // Initial update
-    const intervalId = setInterval(updateServerInfo, 30000) // Update every 30 seconds
+    updateServerInfo() 
+    const intervalId = setInterval(updateServerInfo, 30000) // Update every 30 seconds currently not working
 
     return () => clearInterval(intervalId)
   }, [updateServerInfo])
