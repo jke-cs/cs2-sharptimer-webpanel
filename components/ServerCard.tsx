@@ -1,15 +1,16 @@
 "use client"
 
-import React, { useState, useEffect } from 'react'
-import { MapIcon, UsersIcon, ZapIcon, GamepadIcon, CopyIcon, PlayIcon } from 'lucide-react'
+import React, { useState, useEffect, useCallback } from 'react'
+import { MapIcon, UsersIcon, GamepadIcon, CopyIcon, PlayIcon } from 'lucide-react'
 
 const Button: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: 'default' | 'outline'
+  variant?: 'default' | 'outline' | 'connect'
 }> = ({ children, className = '', variant = 'default', ...props }) => {
   const baseStyles = 'inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none'
   const variantStyles = {
     default: 'bg-primary text-primary-foreground hover:bg-primary/90',
-    outline: 'border border-input bg-background hover:bg-accent hover:text-accent-foreground'
+    outline: 'border border-input bg-background hover:bg-accent hover:text-accent-foreground',
+    connect: 'bg-purple-600 text-white hover:bg-purple-700'
   }
   return (
     <button
@@ -52,7 +53,6 @@ const PlayerCountBar: React.FC<{ currentPlayers: number; maxPlayers: number }> =
             transition: 'width 1s ease-in-out',
           }}
         />
-        {/* Glow Effect */}
         <div
           className="absolute top-0 left-0 h-full rounded-full bg-purple-700/40 blur-sm"
           style={{
@@ -60,11 +60,30 @@ const PlayerCountBar: React.FC<{ currentPlayers: number; maxPlayers: number }> =
             transition: 'width 1s ease-in-out',
           }}
         />
-        {/* Percentage Text */}
-        <span className="absolute inset-0 flex items-center justify-center text-xs font-semibold text-white"> {/* Reduced font size here */}
+        <span className="absolute inset-0 flex items-center justify-center text-xs font-semibold text-white">
           {currentPlayers}/{maxPlayers} Players ({Math.round(widthPercentage)}%)
         </span>
       </div>
+    </div>
+  )
+}
+
+const PingIndicator: React.FC<{ ping: number }> = ({ ping }) => {
+  const getBarColor = (threshold: number) => {
+    if (ping <= threshold) {
+      return 'bg-green-500'
+    } else if (ping <= 60) {
+      return 'bg-orange-500'
+    } else {
+      return 'bg-red-500'
+    }
+  }
+
+  return (
+    <div className="flex items-end h-5 space-x-1 mr-2">
+      <div className={`w-1 h-1 ${getBarColor(60)}`} />
+      <div className={`w-1 h-3 ${ping <= 60 ? getBarColor(30) : 'bg-gray-300'}`} />
+      <div className={`w-1 h-5 ${ping <= 30 ? getBarColor(30) : 'bg-gray-300'}`} />
     </div>
   )
 }
@@ -78,30 +97,44 @@ interface ServerProps {
     ping: number
     connect: string
   }
+  onRefresh: () => Promise<{
+    numPlayers: number
+    maxPlayers: number
+    ping: number
+  }>
 }
 
-export default function ServerCard({ server }: ServerProps) {
+export default function ServerCard({ server: initialServer, onRefresh }: ServerProps) {
+  const [server, setServer] = useState(initialServer)
   const [copying, setCopying] = useState(false)
   const [playerCountHistory, setPlayerCountHistory] = useState<{ time: string; count: number }[]>([])
   const mapImageUrl = `https://cs2browser.com/static/img/maps/${server.map}.webp`
 
-  useEffect(() => {
-    const updatePlayerCount = () => {
+  const updateServerInfo = useCallback(async () => {
+    try {
+      const updatedInfo = await onRefresh()
+      setServer(prevServer => ({
+        ...prevServer,
+        ...updatedInfo
+      }))
+
       const now = new Date()
       const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-      const newData = { time, count: server.numPlayers }
-
       setPlayerCountHistory(prev => {
-        const updated = [...prev, newData].slice(-30)
-        return updated
+        const newData = { time, count: updatedInfo.numPlayers }
+        return [...prev, newData].slice(-30)
       })
+    } catch (error) {
+      console.error('Failed to refresh server info:', error)
     }
+  }, [onRefresh])
 
-    updatePlayerCount() 
-    const intervalId = setInterval(updatePlayerCount, 60000) 
+  useEffect(() => {
+    updateServerInfo() // Initial update
+    const intervalId = setInterval(updateServerInfo, 30000) // Update every 30 seconds
 
     return () => clearInterval(intervalId)
-  }, [server.numPlayers])
+  }, [updateServerInfo])
 
   const copyToClipboard = async () => {
     setCopying(true)
@@ -119,6 +152,12 @@ export default function ServerCard({ server }: ServerProps) {
     e.preventDefault()
     const [ip, port] = server.connect.split(':')
     window.location.href = `steam://connect/${ip}:${port}?appid=730`
+  }
+
+  const getPingColor = (ping: number) => {
+    if (ping < 30) return 'text-green-500'
+    if (ping < 60) return 'text-orange-500'
+    return 'text-red-500'
   }
 
   return (
@@ -144,8 +183,12 @@ export default function ServerCard({ server }: ServerProps) {
             </span>
           </div>
           <div className="flex items-center">
-            <ZapIcon className="w-5 h-5 mr-2 text-muted-foreground" />
-            <span className="text-foreground">{server.ping || 'N/A'} ms</span>
+            <div className="flex items-center">
+              <PingIndicator ping={server.ping} />
+              <span className={`font-medium ${getPingColor(server.ping)}`}>
+                {server.ping || 'N/A'} ms
+              </span>
+            </div>
           </div>
           <div className="flex items-center">
             <GamepadIcon className="w-5 h-5 mr-2 text-muted-foreground" />
@@ -170,7 +213,8 @@ export default function ServerCard({ server }: ServerProps) {
           </Button>
           <Button
             onClick={openSteamConnect}
-            className="flex-1 bg-green-500 text-white hover:bg-green-600"
+            variant="connect"
+            className="flex-1"
           >
             <PlayIcon className="w-4 h-4 mr-2" />
             Connect
