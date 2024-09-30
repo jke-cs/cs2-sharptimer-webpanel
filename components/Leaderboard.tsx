@@ -1,4 +1,6 @@
-import React from 'react';
+'use client'
+
+import React, { useState, useEffect } from 'react';
 import { useTheme } from '../context/ThemeContext'
 import LeaderboardWrapper from './LeaderboardWrapper';
 
@@ -10,18 +12,36 @@ async function getPlayers() {
   return res.json();
 }
 
-export default async function Leaderboard() {
-  const leaderboard = await getPlayers();
+export default function Leaderboard() {
+  const { theme } = useTheme();
+  const [leaderboard, setLeaderboard] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    getPlayers()
+      .then(data => {
+        setLeaderboard(data);
+        setIsLoading(false);
+      })
+      .catch(error => {
+        console.error('Error fetching leaderboard:', error);
+        setIsLoading(false);
+      });
+  }, []);
+
+  if (isLoading) {
+    return <div className="flex justify-center items-center h-screen">Loading...</div>;
+  }
 
   return (
-    <div className="flex flex-col md:flex-row gap-4 sm:gap-6 md:gap-8 p-4 sm:p-6 md:p-8 max-w-7xl mx-auto">
-      <div className="w-full md:w-3/5 bg-gray-800 rounded-lg shadow-lg p-4 sm:p-6">
+    <div className={`flex flex-col md:flex-row gap-4 sm:gap-6 md:gap-8 p-4 sm:p-6 md:p-8 max-w-7xl mx-auto ${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-white text-black'}`}>
+      <div className={`w-full md:w-3/5 ${theme === 'dark' ? 'bg-gray-800' : 'bg-gray-100'} rounded-lg shadow-lg p-4 sm:p-6`}>
         <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-center text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-200">Top Players</h2>
         <LeaderboardWrapper initialLeaderboard={leaderboard} />
       </div>
 
       <div className="w-full md:w-2/5 space-y-4 sm:space-y-6 md:space-y-8">
-        <div className="bg-gray-800 rounded-lg p-4 sm:p-6 shadow-lg">
+        <div className={`${theme === 'dark' ? 'bg-gray-800' : 'bg-gray-100'} rounded-lg p-4 sm:p-6 shadow-lg`}>
           <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 md:mb-6 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-200">How to get Global Points</h2>
           <ul className="space-y-2">
             {[
@@ -30,7 +50,7 @@ export default async function Leaderboard() {
               { action: "Complete Map", points: 31 },
               { action: "Beat PB", points: 20 },
             ].map((item, index) => (
-              <li key={index} className="flex justify-between items-center bg-gray-700 rounded-lg p-2 sm:p-3">
+              <li key={index} className={`flex justify-between items-center ${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-200'} rounded-lg p-2 sm:p-3`}>
                 <span className="text-sm sm:text-base">{item.action}</span>
                 <span className="font-semibold text-green-400 text-sm sm:text-base">+{item.points} Points</span>
               </li>
@@ -38,8 +58,7 @@ export default async function Leaderboard() {
           </ul>
         </div>
 
-
-        <div className="bg-gray-800 rounded-lg p-4 sm:p-6 shadow-lg">
+        <div className={`${theme === 'dark' ? 'bg-gray-800' : 'bg-gray-100'} rounded-lg p-4 sm:p-6 shadow-lg`}>
           <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 md:mb-6 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-200">In-game Ranks</h2>
           <ul className="space-y-2">
             {[
@@ -53,7 +72,7 @@ export default async function Leaderboard() {
               { rank: "Silver", color: "text-gray-400", top: "50%" },
               { rank: "Bronze", color: "text-yellow-800", top: "99%" },
             ].map((item, index) => (
-              <li key={index} className="bg-gray-700 rounded-lg p-2 sm:p-3 flex justify-between items-center">
+              <li key={index} className={`${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-200'} rounded-lg p-2 sm:p-3 flex justify-between items-center`}>
                 <span className={`font-semibold ${item.color} text-sm sm:text-base`}>[{item.rank}]</span>
                 <span className="text-xs sm:text-sm">Top {item.top}</span>
               </li>

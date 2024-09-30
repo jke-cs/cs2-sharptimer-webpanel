@@ -25,6 +25,7 @@ export default function Header() {
     { name: 'Home', path: '/' },
     { name: 'Leaderboard', path: '/leaderboard' },
     { name: 'Map Records', path: '/maprecords' },
+    { name: 'Maps Tierlist', path: '/tierlist' },
   ]
 
   return (
