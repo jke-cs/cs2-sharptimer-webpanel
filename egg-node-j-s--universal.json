@@ -1,0 +1,52 @@
+{
+    "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PTERODACTYL PANEL - PTERODACTYL.IO",
+    "meta": {
+        "version": "PTDL_v2",
+        "update_url": null
+    },
+    "exported_at": "2024-09-28T15:32:59+02:00",
+    "name": "NodeJS-Universal",
+    "author": "yajtpg@gmail.com",
+    "description": "NodeJS Universal Egg.",
+    "features": null,
+    "docker_images": {
+        "quay.io\/yajtpg\/pterodactyl-images:nodejs-19": "quay.io\/yajtpg\/pterodactyl-images:nodejs-19"
+    },
+    "file_denylist": [],
+    "startup": "\/start.sh",
+    "config": {
+        "files": "{}",
+        "startup": "{\r\n    \"done\": \"\",\r\n    \"userInteraction\": []\r\n}",
+        "logs": "{\r\n    \"custom\": true,\r\n    \"location\": \"logs\/latest.log\"\r\n}",
+        "stop": "^C"
+    },
+    "scripts": {
+        "installation": {
+            "script": null,
+            "container": "alpine:3.4",
+            "entrypoint": "ash"
+        }
+    },
+    "variables": [
+        {
+            "name": "Startup Command 1",
+            "description": "First Command used to start the server.",
+            "env_variable": "STARTUP_CMD",
+            "default_value": "npm install",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|max:256",
+            "field_type": "text"
+        },
+        {
+            "name": "Startup Command 2 (Optional)",
+            "description": "Second Startup Command",
+            "env_variable": "SECOND_CMD",
+            "default_value": "npm run dev",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:256",
+            "field_type": "text"
+        }
+    ]
+}
