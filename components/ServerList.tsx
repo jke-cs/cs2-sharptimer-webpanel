@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import ServerCard from './ServerCard'
 import LoadingSpinner from './LoadingSpinner'
 
@@ -62,6 +63,19 @@ export default function ServerList() {
     }
   }
 
+  const serverVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: (i: number) => ({
+      opacity: 1,
+      y: 0,
+      transition: {
+        delay: i * 0.05,
+        duration: 0.5,
+        ease: 'easeOut',
+      },
+    }),
+  }
+
   if (loading) {
     return <LoadingSpinner />
   }
@@ -72,16 +86,26 @@ export default function ServerList() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
-        {servers.map((server, index) => (
-          <div key={index} className="w-full max-w-sm">
-            <ServerCard 
-              server={server} 
-              onRefresh={() => handleRefresh(server.connect)}
-            />
-          </div>
-        ))}
-      </div>
+      <AnimatePresence>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
+          {servers.map((server, index) => (
+            <motion.div
+              key={server.connect}
+              variants={serverVariants}
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              custom={index}
+              className="w-full max-w-sm"
+            >
+              <ServerCard 
+                server={server} 
+                onRefresh={() => handleRefresh(server.connect)}
+              />
+            </motion.div>
+          ))}
+        </div>
+      </AnimatePresence>
     </div>
   )
 }
