@@ -22,6 +22,7 @@ A NextJS+React Webpanel for Sharptimer
 ## Requirements
 
 [NodeJS](https://nodejs.org/en/download/package-manager/current)
+
 [SharpTimer](https://github.com/Letaryat/poor-sharptimer)
 
 
