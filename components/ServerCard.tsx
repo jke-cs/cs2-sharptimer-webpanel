@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useEffect, useCallback } from 'react'
-import { MapIcon, UsersIcon, GamepadIcon, CopyIcon, PlayIcon } from 'lucide-react'
+import { MapIcon, UsersIcon, GamepadIcon, CopyIcon, PlayIcon, LayersIcon } from 'lucide-react'
 
 const Button: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: 'default' | 'outline' | 'connect'
@@ -104,10 +104,16 @@ interface ServerProps {
   }>
 }
 
+interface MapData {
+  mapname: string
+  tier: number
+}
+
 export default function ServerCard({ server: initialServer, onRefresh }: ServerProps) {
   const [server, setServer] = useState(initialServer)
   const [copying, setCopying] = useState(false)
   const [playerCountHistory, setPlayerCountHistory] = useState<{ time: string; count: number }[]>([])
+  const [mapTier, setMapTier] = useState<number | null>(null)
   const mapImageUrl = `https://cs2browser.com/static/img/maps/${server.map}.webp`
 
   const updateServerInfo = useCallback(async () => {
@@ -135,6 +141,21 @@ export default function ServerCard({ server: initialServer, onRefresh }: ServerP
 
     return () => clearInterval(intervalId)
   }, [updateServerInfo])
+
+  useEffect(() => {
+    const fetchMapTier = async () => {
+      try {
+        const response = await fetch('/maps.json')
+        const mapsData: MapData[] = await response.json()
+        const currentMap = mapsData.find(map => map.mapname.toLowerCase() === server.map.toLowerCase())
+        setMapTier(currentMap ? currentMap.tier : null)
+      } catch (error) {
+        console.error('Failed to fetch map tier:', error)
+      }
+    }
+
+    fetchMapTier()
+  }, [server.map])
 
   const copyToClipboard = async () => {
     setCopying(true)
@@ -193,6 +214,12 @@ export default function ServerCard({ server: initialServer, onRefresh }: ServerP
           <div className="flex items-center">
             <GamepadIcon className="w-5 h-5 mr-2 text-muted-foreground" />
             <span className="text-foreground">{server.connect || 'Unknown'}</span>
+          </div>
+          <div className="flex items-center">
+            <LayersIcon className="w-5 h-5 mr-2 text-muted-foreground" />
+            <span className="text-foreground">
+              Tier: {mapTier !== null ? mapTier : 'Unknown'}
+            </span>
           </div>
         </div>
         <div className="mt-6 flex space-x-2">
