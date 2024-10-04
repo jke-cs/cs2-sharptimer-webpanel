@@ -14,26 +14,12 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-
     - name: cs2-sharptimer-webpanel
       run: |
         zip -r cs2-sharptimer-webpanel.zip . -x ".git/*" ".github/*"
 
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Upload ZIP as artifact
+      uses: actions/upload-artifact@v3
       with:
-        tag_name: '0.2.0' 
-        release_name: 'cs2-sharptimer-webpanel.zip'
-        draft: false
-        prerelease: false
-
-    - name: Upload Release Asset
-      uses: actions/upload-release-asset@v1
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: cs2-sharptimer-webpanel.zip
-        asset_name: cs2-sharptimer-webpanel.zip
-        asset_content_type: application/zip
+        name: cs2-sharptimer-webpanel
+        path: cs2-sharptimer-webpanel.zip
