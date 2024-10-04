@@ -30,5 +30,3 @@ jobs:
         tag: "${{ steps.get_version.outputs.VERSION }}"
         body: |
           Release ${{ steps.get_version.outputs.VERSION }} of ${{ env.PROJECT_NAME }}
-
-          This zip file contains the entire project.
