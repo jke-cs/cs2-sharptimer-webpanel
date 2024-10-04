@@ -3,7 +3,7 @@ name: Build and Zip Project
 on:
   push:
     tags:
-      - 'v*.*.*'
+      - 'v*.*.*'  # This triggers the workflow on version tags like v1.0.0
 
 jobs:
   build:
@@ -17,13 +17,8 @@ jobs:
         run: |
           zip -r cs2-sharptimer-webpanel.zip .
 
-      - name: Create Draft Release
-        id: create_draft
-        uses: softprops/action-gh-release@v1
+      - name: Upload the zip file
+        uses: actions/upload-artifact@v4
         with:
-          tag_name: ${{ github.ref }}
-          name: Release ${{ github.ref }}
-          draft: true 
-          files: cs2-sharptimer-webpanel.zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          name: cs2-sharptimer-webpanel
+          path: cs2-sharptimer-webpanel.zip
