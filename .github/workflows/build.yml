@@ -34,7 +34,7 @@ jobs:
     - name: Create Release
       id: create_release
       run: |
-        TAG_NAME="v${{ env.BUILD_NUMBER }}"
+        TAG_NAME="0.2.0"
         RELEASE_NAME="${{ env.PROJECT_NAME }} Release v${{ env.BUILD_NUMBER }}"
         DESCRIPTION="Release of ${{ env.PROJECT_NAME }}."
 
