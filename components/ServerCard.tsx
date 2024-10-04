@@ -1,31 +1,47 @@
 "use client"
 
 import React, { useState, useEffect, useCallback } from 'react'
-import { MapIcon, UsersIcon, GamepadIcon, CopyIcon, PlayIcon, LayersIcon } from 'lucide-react'
+import { MapIcon, UsersIcon, GamepadIcon, CopyIcon, PlayIcon, LayersIcon, RefreshCwIcon, ChevronDownIcon } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
 
-const Button: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: 'default' | 'outline' | 'connect'
-}> = ({ children, className = '', variant = 'default', ...props }) => {
+type ButtonVariant = 'default' | 'outline' | 'connect' | 'icon'
+
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: ButtonVariant
+}
+
+const Button: React.FC<ButtonProps> = ({ children, className = '', variant = 'default', ...props }) => {
   const baseStyles = 'inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none'
-  const variantStyles = {
+  const variantStyles: Record<ButtonVariant, string> = {
     default: 'bg-primary text-primary-foreground hover:bg-primary/90',
     outline: 'border border-input bg-background hover:bg-accent hover:text-accent-foreground',
-    connect: 'bg-purple-600 text-white hover:bg-purple-700'
+    connect: 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:from-purple-700 hover:to-indigo-700',
+    icon: 'bg-transparent text-muted-foreground hover:text-foreground'
   }
   return (
-    <button
-      className={`${baseStyles} ${variantStyles[variant]} h-10 py-2 px-4 ${className} transition-colors duration-200`}
+    <motion.button
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+      className={`${baseStyles} ${variantStyles[variant]} h-10 py-2 px-4 ${className} transition-all duration-200`}
       {...props}
     >
       {children}
-    </button>
+    </motion.button>
   )
 }
 
 const Card: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ children, className = '', ...props }) => (
-  <div className={`rounded-lg border bg-card text-card-foreground shadow-sm overflow-hidden ${className}`} {...props}>
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    exit={{ opacity: 0, y: -20 }}
+    transition={{ duration: 0.3 }}
+    className={`rounded-xl border bg-card text-card-foreground shadow-lg overflow-hidden ${className}`}
+    {...props}
+  >
     {children}
-  </div>
+  </motion.div>
 )
 
 const CardContent: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ children, className = '', ...props }) => (
@@ -40,27 +56,37 @@ const CardFooter: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ children, 
   </div>
 )
 
+const CardHeader: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ children, className = '', ...props }) => (
+  <div className={`flex flex-col space-y-1.5 p-6 ${className}`} {...props}>
+    {children}
+  </div>
+)
+
+const CardTitle: React.FC<React.HTMLAttributes<HTMLHeadingElement>> = ({ children, className = '', ...props }) => (
+  <h3 className={`text-lg font-semibold leading-none tracking-tight ${className}`} {...props}>
+    {children}
+  </h3>
+)
+
 const PlayerCountBar: React.FC<{ currentPlayers: number; maxPlayers: number }> = ({ currentPlayers, maxPlayers }) => {
   const widthPercentage = Math.min((currentPlayers / maxPlayers) * 100, 100)
 
   return (
     <div className="w-full mt-4">
-      <div className="relative h-4 w-full bg-gray-300 rounded-full overflow-hidden shadow-md"> 
-        <div
-          className="absolute top-0 left-0 h-full rounded-full bg-gradient-to-r from-purple-700 to-purple-500 animate-gradient-move"
-          style={{
-            width: `${widthPercentage}%`,
-            transition: 'width 1s ease-in-out',
-          }}
+      <div className="relative h-6 w-full bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden shadow-inner">
+        <motion.div
+          className="absolute top-0 left-0 h-full rounded-full bg-gradient-to-r from-purple-600 to-indigo-600"
+          initial={{ width: 0 }}
+          animate={{ width: `${widthPercentage}%` }}
+          transition={{ duration: 0.5, ease: "easeInOut" }}
         />
-        <div
-          className="absolute top-0 left-0 h-full rounded-full bg-purple-700/40 blur-sm"
-          style={{
-            width: `${widthPercentage}%`,
-            transition: 'width 1s ease-in-out',
-          }}
+        <motion.div
+          className="absolute top-0 left-0 h-full rounded-full bg-white opacity-20"
+          initial={{ width: 0, opacity: 0 }}
+          animate={{ width: `${widthPercentage}%`, opacity: 0.2 }}
+          transition={{ duration: 0.5, ease: "easeInOut", delay: 0.2 }}
         />
-        <span className="absolute inset-0 flex items-center justify-center text-xs font-semibold text-white">
+        <span className="absolute inset-0 flex items-center justify-center text-xs font-semibold text-white mix-blend-difference">
           {currentPlayers}/{maxPlayers} Players ({Math.round(widthPercentage)}%)
         </span>
       </div>
@@ -70,20 +96,31 @@ const PlayerCountBar: React.FC<{ currentPlayers: number; maxPlayers: number }> =
 
 const PingIndicator: React.FC<{ ping: number }> = ({ ping }) => {
   const getBarColor = (threshold: number) => {
-    if (ping < 50) {
-      return 'bg-green-500'
-    } else if (ping < 80) {
-      return 'bg-orange-500'
-    } else {
-      return 'bg-red-500'
-    }
+    if (ping < 50) return 'bg-green-500'
+    if (ping < 80) return 'bg-yellow-500'
+    return 'bg-red-500'
   }
 
   return (
     <div className="flex items-end h-5 space-x-1 mr-2">
-      <div className={`w-1 h-1 ${getBarColor(80)}`} />
-      <div className={`w-1 h-3 ${ping < 80 ? getBarColor(50) : 'bg-gray-300'}`} />
-      <div className={`w-1 h-5 ${ping < 50 ? getBarColor(50) : 'bg-gray-300'}`} />
+      <motion.div
+        className={`w-1 ${getBarColor(80)}`}
+        initial={{ height: 0 }}
+        animate={{ height: '20%' }}
+        transition={{ duration: 0.3, delay: 0.1 }}
+      />
+      <motion.div
+        className={`w-1 ${ping < 80 ? getBarColor(50) : 'bg-gray-300'}`}
+        initial={{ height: 0 }}
+        animate={{ height: '60%' }}
+        transition={{ duration: 0.3, delay: 0.2 }}
+      />
+      <motion.div
+        className={`w-1 ${ping < 50 ? getBarColor(50) : 'bg-gray-300'}`}
+        initial={{ height: 0 }}
+        animate={{ height: '100%' }}
+        transition={{ duration: 0.3, delay: 0.3 }}
+      />
     </div>
   )
 }
@@ -98,6 +135,7 @@ interface ServerProps {
     connect: string
   }
   onRefresh: () => Promise<{
+    name: string
     numPlayers: number
     maxPlayers: number
     ping: number
@@ -114,9 +152,12 @@ export default function ServerCard({ server: initialServer, onRefresh }: ServerP
   const [copying, setCopying] = useState(false)
   const [playerCountHistory, setPlayerCountHistory] = useState<{ time: string; count: number }[]>([])
   const [mapTier, setMapTier] = useState<number | null>(null)
+  const [isExpanded, setIsExpanded] = useState(false)
+  const [isRefreshing, setIsRefreshing] = useState(false)
   const mapImageUrl = `https://cs2browser.com/static/img/maps/${server.map}.webp`
 
   const updateServerInfo = useCallback(async () => {
+    setIsRefreshing(true)
     try {
       const updatedInfo = await onRefresh()
       setServer(prevServer => ({
@@ -128,17 +169,18 @@ export default function ServerCard({ server: initialServer, onRefresh }: ServerP
       const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       setPlayerCountHistory(prev => {
         const newData = { time, count: updatedInfo.numPlayers }
-        return [...prev, newData].slice(-30)
+        return [...prev, newData].slice(-30) 
       })
     } catch (error) {
       console.error('Failed to refresh server info:', error)
+    } finally {
+      setIsRefreshing(false)
     }
   }, [onRefresh])
 
   useEffect(() => {
-    updateServerInfo() 
-    const intervalId = setInterval(updateServerInfo, 30000) // Update every 30 seconds currently not working
-
+    updateServerInfo()
+    const intervalId = setInterval(updateServerInfo, 30000)
     return () => clearInterval(intervalId)
   }, [updateServerInfo])
 
@@ -177,33 +219,51 @@ export default function ServerCard({ server: initialServer, onRefresh }: ServerP
 
   const getPingColor = (ping: number) => {
     if (ping < 50) return 'text-green-500'
-    if (ping < 80) return 'text-orange-500'
+    if (ping < 80) return 'text-yellow-500'
     return 'text-red-500'
   }
 
+  const truncateServerName = (name: string, maxLength: number) => {
+    if (!name) return 'Unknown Server'
+    return name.length > maxLength ? name.substring(0, maxLength - 3) + '...' : name
+  }
+
   return (
-    <Card className="transition-all duration-300 hover:shadow-lg">
+    <Card className="transition-all duration-300 hover:shadow-xl bg-gradient-to-br from-gray-900 to-gray-800">
       <div
-        className="h-48 bg-cover bg-center"
+        className="h-48 bg-cover bg-center relative"
         style={{ backgroundImage: `url(${mapImageUrl})` }}
       >
-        <div className="h-full w-full bg-black bg-opacity-50 p-6 flex flex-col justify-between">
-          <h2 className="text-2xl font-bold text-white">{server.name || 'Unknown Server'}</h2>
+        <div className="absolute inset-0 bg-black bg-opacity-60 backdrop-blur-sm" />
+        <div className="h-full w-full p-6 flex flex-col justify-between relative z-10">
+          <div className="flex justify-between items-start">
+            <h2 className="text-2xl font-bold text-white truncate max-w-[80%]" title={server.name}>
+              {truncateServerName(server.name, 30)}
+            </h2>
+            <Button 
+              variant="icon" 
+              onClick={updateServerInfo} 
+              className="text-white"
+              disabled={isRefreshing}
+            >
+              <RefreshCwIcon className={`w-5 h-5 ${isRefreshing ? 'animate-spin' : ''}`} />
+            </Button>
+          </div>
           <div className="flex items-center text-white">
             <MapIcon className="w-5 h-5 mr-2" />
-            <span>{server.map || 'Unknown'}</span>
+            <span className="font-medium">{server.map || 'Unknown'}</span>
           </div>
         </div>
       </div>
-      <CardContent className="p-6">
-        <div className="space-y-3">
-          <div className="flex items-center">
-            <UsersIcon className="w-5 h-5 mr-2 text-muted-foreground" />
-            <span className="text-foreground">
-              {server.numPlayers}/{server.maxPlayers} Players
-            </span>
-          </div>
-          <div className="flex items-center">
+      <CardContent className="p-6 bg-gradient-to-b from-gray-800 to-gray-900">
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <UsersIcon className="w-5 h-5 mr-2 text-purple-400" />
+              <span className="text-white font-medium">
+                {server.numPlayers}/{server.maxPlayers} Players
+              </span>
+            </div>
             <div className="flex items-center">
               <PingIndicator ping={server.ping} />
               <span className={`font-medium ${getPingColor(server.ping)}`}>
@@ -212,12 +272,12 @@ export default function ServerCard({ server: initialServer, onRefresh }: ServerP
             </div>
           </div>
           <div className="flex items-center">
-            <GamepadIcon className="w-5 h-5 mr-2 text-muted-foreground" />
-            <span className="text-foreground">{server.connect || 'Unknown'}</span>
+            <GamepadIcon className="w-5 h-5 mr-2 text-indigo-400" />
+            <span className="text-white truncate" title={server.connect}>{server.connect || 'Unknown'}</span>
           </div>
           <div className="flex items-center">
-            <LayersIcon className="w-5 h-5 mr-2 text-muted-foreground" />
-            <span className="text-foreground">
+            <LayersIcon className="w-5 h-5 mr-2 text-blue-400" />
+            <span className="text-white">
               Tier: {mapTier !== null ? mapTier : 'Unknown'}
             </span>
           </div>
@@ -227,7 +287,7 @@ export default function ServerCard({ server: initialServer, onRefresh }: ServerP
             onClick={copyToClipboard}
             disabled={copying}
             variant="outline"
-            className="flex-1 hover:bg-primary hover:text-primary-foreground"
+            className="flex-1 hover:bg-white hover:text-gray-900 border-white text-white"
           >
             {copying ? (
               'Copied!'
@@ -248,13 +308,91 @@ export default function ServerCard({ server: initialServer, onRefresh }: ServerP
           </Button>
         </div>
       </CardContent>
-      <CardFooter className="bg-muted p-6 flex-col items-start">
-        <div className="w-full mb-2">
-          <span className="text-sm font-medium text-muted-foreground">
+      <CardFooter className="bg-gray-900 p-6 flex-col items-start">
+        <div className="w-full mb-2 flex justify-between items-center">
+          <span className="text-sm font-medium text-gray-400">
             Player Count
           </span>
+          <Button variant="ghost" size="sm" onClick={() => setIsExpanded(!isExpanded)}>
+            <ChevronDownIcon className={`h-4 w-4 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} />
+          </Button>
         </div>
         <PlayerCountBar currentPlayers={server.numPlayers} maxPlayers={server.maxPlayers} />
+        <AnimatePresence>
+          {isExpanded && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+              className="w-full mt-4 overflow-hidden"
+            >
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-sm font-medium text-gray-400">Player Count History</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="h-[200px]">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <LineChart data={playerCountHistory}>
+                        <XAxis 
+                          dataKey="time" 
+                          stroke="#888888"
+                          fontSize={12}
+                          tickLine={false}
+                          axisLine={false}
+                        />
+                        <YAxis
+                          stroke="#888888"
+                          fontSize={12}
+                          tickLine={false}
+                          axisLine={false}
+                          tickFormatter={(value) => `${value}`}
+                        />
+                        <Tooltip
+                          content={({ active, payload }) => {
+                            if (active && payload && payload.length) {
+                              return (
+                                <div className="rounded-lg border bg-background p-2 shadow-sm">
+                                  <div className="grid grid-cols-2 gap-2">
+                                    <div className="flex flex-col">
+                                      <span className="text-[0.70rem] uppercase text-muted-foreground">
+                                        Time
+                                      </span>
+                                      <span className="font-bold text-muted-foreground">
+                                        {payload[0].payload.time}
+                                      </span>
+                                    </div>
+                                    <div className="flex flex-col">
+                                      <span className="text-[0.70rem] uppercase text-muted-foreground">
+                                        Players
+                                      </span>
+                                      <span className="font-bold">
+                                        {payload[0].value}
+                                      </span>
+                                    </div>
+                                  </div>
+                                </div>
+                              )
+                            }
+                            return null
+                          }}
+                        />
+                        <Line
+                          type="monotone"
+                          dataKey="count"
+                          stroke="#ffbb00"
+                          strokeWidth={2}
+                          dot={false}
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </CardFooter>
     </Card>
   )
