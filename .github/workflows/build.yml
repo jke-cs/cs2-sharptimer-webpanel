@@ -1,0 +1,25 @@
+name: cs2-sharptimer-webpanel
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  zip:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: cs2-sharptimer-webpanel
+      run: |
+        zip -r cs2-sharptimer-webpanel.zip . -x ".git/*" ".github/*"
+
+    - name: Upload ZIP as artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: cs2-sharptimer-webpanel
+        path: cs2-sharptimer-webpanel.zip
