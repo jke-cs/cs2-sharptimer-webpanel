@@ -18,7 +18,7 @@ jobs:
           zip -r cs2-sharptimer-webpanel.zip .
 
       - name: Upload the zip file
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: cs2-sharptimer-webpanel
           path: cs2-sharptimer-webpanel.zip
