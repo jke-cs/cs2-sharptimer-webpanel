@@ -17,12 +17,13 @@ jobs:
         run: |
           zip -r cs2-sharptimer-webpanel.zip .
 
-      - name: Create Release
-        id: create_release
+      - name: Create Draft Release
+        id: create_draft
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ github.ref }} 
-          release_name: Release ${{ github.ref }}
-          files: cs2-sharptimer-webpanel.zip 
+          tag_name: ${{ github.ref }}
+          name: Release ${{ github.ref }}
+          draft: true 
+          files: cs2-sharptimer-webpanel.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
