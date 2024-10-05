@@ -27,6 +27,15 @@
 		"mapper" : "Who?"
 	},
 	{
+		"mapname" : "surf_rookie",
+		"tier" : 2,
+		"maxvelocity" : 3500.0,
+		"announcerecord" : 1,
+		"gravityfix" : 1,
+		"ranked" : 1,
+		"mapper" : "xen"
+	},
+	{
 		"mapname" : "surf_1day",
 		"tier" : 3,
 		"maxvelocity" : 3500.0,
