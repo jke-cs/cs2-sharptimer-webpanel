@@ -11801,7 +11801,7 @@
 	{
 		"mapname" : "surf_utopia_njv",
 		"tier" : 1,
-		"maxvelocity" : 10000.0,
+		"maxvelocity" : 3500.0,
 		"announcerecord" : 1,
 		"gravityfix" : 1,
 		"ranked" : 1,
