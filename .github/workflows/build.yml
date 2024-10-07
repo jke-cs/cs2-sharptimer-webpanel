@@ -25,7 +25,14 @@ jobs:
           path: ../<repository_name>.zip
 
       - name: Create Draft Release
+        id: create_release
         run: |
-          gh release create "v*.*.*" ../<repository_name>.zip --title "Build" --notes "Latest Release." --draft
+          gh release create "v*.*.*" ../<repository_name>.zip --title "Build" --notes "Latest Release."
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Assets to Release
+        run: |
+          gh release upload ${{ steps.create_release.outputs.url }} ../<repository_name>.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
