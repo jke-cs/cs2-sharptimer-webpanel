@@ -1,5 +1,9 @@
 name: build
-on: [workflow_dispatch]
+on:
+  push:
+    tags:
+      - 'v*.*.*'  # Matches version tags like v1.0.0, v2.1.0, etc.
+  workflow_dispatch:
 
 jobs:
   zip-n-push:
@@ -27,12 +31,12 @@ jobs:
       - name: Create Draft Release
         id: create_release
         run: |
-          gh release create "v*.*.*" ../<repository_name>.zip --title "Build" --notes "Latest Release."
+          gh release create "${{ github.ref }}" ../<repository_name>.zip --title "Build" --notes "Latest Release." --draft
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload Assets to Release
         run: |
-          gh release upload ${{ steps.create_release.outputs.url }} ../<repository_name>.zip
+          gh release upload "${{ github.ref }}" ../<repository_name>.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
