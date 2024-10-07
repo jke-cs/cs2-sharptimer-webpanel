@@ -1,24 +1,13 @@
-name: Build and Zip Project
-
-on:
-  push:
-    tags:
-      - 'v*.*.*'  # This triggers the workflow on version tags like v1.0.0
+name: build
+on: [workflow_dispatch]
 
 jobs:
-  build:
+  zip-n-push:
+    name: Zip and Push
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Zip the project
+      - name: Zip Folder
         run: |
-          zip -r cs2-sharptimer-webpanel.zip .
-
-      - name: Upload the zip file
-        uses: actions/upload-artifact@v4
-        with:
-          name: cs2-sharptimer-webpanel
-          path: cs2-sharptimer-webpanel.zip
+          cd ../
+          rm -rf <repository_name>.zip
+          zip -r <repository_name>.zip <repository_name> -x ".git/*" ".github/*"
