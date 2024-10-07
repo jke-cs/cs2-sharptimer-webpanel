@@ -2,7 +2,7 @@ name: build
 on:
   push:
     tags:
-      - 'v*.*.*'
+      - 'v*.*.*'  # Matches version tags like v1.0.0, v2.1.0, etc.
   workflow_dispatch:
 
 jobs:
@@ -21,25 +21,23 @@ jobs:
 
       - name: Zip Folder
         run: |
-          cd ..
-          rm -rf ${{ env.REPO_NAME }}.zip
           zip -r ${{ env.REPO_NAME }}.zip ${{ env.REPO_NAME }} -x ".git/*" ".github/*"
 
       - name: Upload Zip as Artifact
         uses: actions/upload-artifact@v4
         with:
           name: project-zip
-          path: ../${{ env.REPO_NAME }}.zip
+          path: ${{ env.REPO_NAME }}.zip
 
       - name: Create Draft Release
         id: create_release
         run: |
-          gh release create "${{ github.ref }}" ../${{ env.REPO_NAME }}.zip --title "Build" --notes "Latest Release."
+          gh release create "${{ github.ref }}" ${{ env.REPO_NAME }}.zip --title "Build" --notes "Latest Release." --draft
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload Assets to Release
         run: |
-          gh release upload "${{ github.ref }}" ../${{ env.REPO_NAME }}.zip
+          gh release upload "${{ github.ref }}" ${{ env.REPO_NAME }}.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
