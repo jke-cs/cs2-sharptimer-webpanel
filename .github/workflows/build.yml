@@ -6,10 +6,37 @@ jobs:
     name: Zip and Push
     runs-on: ubuntu-latest
     steps:
-     - name: Checkout code
+      - name: Checkout code
         uses: actions/checkout@v2
+
       - name: Zip Folder
         run: |
           cd ../
           rm -rf <repository_name>.zip
           zip -r <repository_name>.zip <repository_name> -x ".git/*" ".github/*"
+
+      - name: Upload Zip as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: project-zip
+          path: ../<repository_name>.zip
+
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: 'v*.*.*'
+          release_name: 'Build'
+          body: |
+            Latest Release.
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ../<repository_name>.zip
+          asset_name: <repository_name>.zip
+          asset_content_type: application/zip
