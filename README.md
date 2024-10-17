@@ -16,7 +16,7 @@ A NextJS+React Webpanel for Sharptimer
 
 
 
-![CS2 Sharptimer Webpanel](https://i.gyazo.com/26af839f22273580a460f6c2576ebcbf.png)
+![CS2 Sharptimer Webpanel](https://i.gyazo.com/313029b595f669cac3fee4a5847cd22f.png)
 
 
 ## Requirements
