@@ -214,7 +214,8 @@ export default function ServerCard({ server: initialServer, onRefresh }: ServerP
   const openSteamConnect = (e: React.MouseEvent) => {
     e.preventDefault()
     const [ip, port] = server.connect.split(':')
-    window.location.href = `steam://connect/${ip}:${port}?appid=730`
+    const cs2AppId = '730'
+    window.location.href = `steam://rungameid/${cs2AppId}//+connect%20${ip}:${port}`
   }
 
   const getPingColor = (ping: number) => {
