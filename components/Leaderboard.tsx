@@ -62,15 +62,16 @@ export default function Leaderboard() {
           <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 md:mb-6 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-200">In-game Ranks</h2>
           <ul className="space-y-2">
             {[
-              { rank: "Legend", color: "text-yellow-400", top: "0.05%" },
-              { rank: "PRO", color: "text-purple-400", top: "0.1%" },
-              { rank: "OG", color: "text-red-400", top: "2.5%" },
-              { rank: "Master", color: "text-blue-400", top: "10%" },
-              { rank: "Diamond", color: "text-cyan-400", top: "20%" },
-              { rank: "Platinum", color: "text-green-400", top: "30%" },
-              { rank: "Gold", color: "text-yellow-600", top: "40%" },
-              { rank: "Silver", color: "text-gray-400", top: "50%" },
-              { rank: "Bronze", color: "text-yellow-800", top: "99%" },
+                        { rank: "GOD III", color: "text-red-400", top: "1%" },
+                        { rank: "GOD II", color: "text-red-400", top: "2%" },
+                        { rank: "GOD I", color: "text-red-400", top: "3%" },
+                        { rank: "ROYALTY I - III", color: "text-purple-400", top: "20% 10%" },
+                        { rank: "LEGEND I - III", color: "text-yellow-400", top: "35% - 25%" },
+                        { rank: "MASTER I - III", color: "text-blue-400", top: "50% - 40%" },
+                        { rank: "DIAMOND I - III", color: "text-cyan-400", top: "65% - 55%" },
+                        { rank: "PLATINUM I - III", color: "text-green-400", top: "80% - 70%" },
+                        { rank: "GOLD I - III", color: "text-yellow-600", top: "95% - 85%" },
+                        { rank: "SILVER I", color: "text-gray-400", top: "100%" },
             ].map((item, index) => (
               <li key={index} className={`${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-200'} rounded-lg p-2 sm:p-3 flex justify-between items-center`}>
                 <span className={`font-semibold ${item.color} text-sm sm:text-base`}>[{item.rank}]</span>
