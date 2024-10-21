@@ -65,7 +65,7 @@ export default function Leaderboard() {
                         { rank: "GOD III", color: "text-red-400", top: "1%" },
                         { rank: "GOD II", color: "text-red-400", top: "2%" },
                         { rank: "GOD I", color: "text-red-400", top: "3%" },
-                        { rank: "ROYALTY I - III", color: "text-purple-400", top: "20% 10%" },
+                        { rank: "ROYALTY I - III", color: "text-purple-400", top: "20% - 10%" },
                         { rank: "LEGEND I - III", color: "text-yellow-400", top: "35% - 25%" },
                         { rank: "MASTER I - III", color: "text-blue-400", top: "50% - 40%" },
                         { rank: "DIAMOND I - III", color: "text-cyan-400", top: "65% - 55%" },
